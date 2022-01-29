@@ -1,13 +1,20 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { fetchAreas } from './dashboardAPI';
+import { fetchAreas, fetchUsers } from './dashboardAPI';
 
 const initialState = {
     status: 'idle',
-    areas: []
+    areas: {},
+    users: []
 };
 
 export const fetchAreasAsync = createAsyncThunk('dashboard/fetchAreas', async () => {
     const data = await fetchAreas();
+
+    return data;
+});
+
+export const fetchUsersAsync = createAsyncThunk('dashboard/fetchUsers', async () => {
+    const data = await fetchUsers();
 
     return data;
 });
@@ -17,7 +24,7 @@ export const dashboardSlice = createSlice({
     initialState,
     reducers: {
         addAreas: ({ areas }, action) => {
-            areas.push(action.payload);
+            areas = action.payload;
         }
     },
     extraReducers: (builder) => {
@@ -27,7 +34,17 @@ export const dashboardSlice = createSlice({
             })
             .addCase(fetchAreasAsync.fulfilled, (state, action) => {
                 state.status = 'idle';
-                state.areas = action.payload.features;
+                state.areas = {
+                    type: action.payload.type,
+                    features: action.payload.features
+                };
+            })
+            .addCase(fetchUsersAsync.pending, (state) => {
+                state.status = 'loading';
+            })
+            .addCase(fetchUsersAsync.fulfilled, (state, action) => {
+                state.status = 'idle';
+                state.users = action.payload.users;
             });
     }
 });
