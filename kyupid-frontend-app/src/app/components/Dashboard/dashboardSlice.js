@@ -4,7 +4,10 @@ import { fetchAreas, fetchUsers } from './dashboardAPI';
 const initialState = {
     status: 'idle',
     areas: {},
-    users: []
+    users: [],
+    filters: {
+        numUsers: 100
+    }
 };
 
 export const fetchAreasAsync = createAsyncThunk('dashboard/fetchAreas', async () => {
@@ -20,11 +23,17 @@ export const fetchUsersAsync = createAsyncThunk('dashboard/fetchUsers', async ()
 });
 
 export const dashboardSlice = createSlice({
-    name: 'counter',
+    name: 'dashboard',
     initialState,
     reducers: {
-        addAreas: ({ areas }, action) => {
-            areas = action.payload;
+        addAreas: (state, action) => {
+            state.areas = action.payload;
+        },
+        updateFilters: (state, action) => {
+            state.filters = {
+                ...state.filters,
+                ...action.payload
+            };
         }
     },
     extraReducers: (builder) => {
@@ -49,6 +58,6 @@ export const dashboardSlice = createSlice({
     }
 });
 
-export const { addAreas } = dashboardSlice.actions;
+export const { addAreas, updateFilters } = dashboardSlice.actions;
 
 export default dashboardSlice.reducer;

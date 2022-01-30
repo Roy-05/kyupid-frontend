@@ -1,10 +1,9 @@
-import Mapbox from '../../app/components/Mapbox/Mapbox';
-import Sidebar from '../../app/components/Sidebar/Sidebar';
+import Mapbox from '../Mapbox/Mapbox';
+import Sidebar from '../Sidebar/Sidebar';
 import styles from './Dashboard.module.scss';
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { addAreas, fetchAreasAsync, fetchUsersAsync } from './dashboardSlice';
-import { Counter } from '../counter/Counter';
+import { fetchAreasAsync, fetchUsersAsync } from './dashboardSlice';
 
 const Dashboard = ({}) => {
     const dispatch = useDispatch();

@@ -1,13 +1,17 @@
 import { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { addAreas, updateFilters } from '../Dashboard/dashboardSlice';
+import Slider from '../Slider/Slider';
 import styles from './Sidebar.module.scss';
 
 const Sidebar = ({}) => {
-    const { users, areas } = useSelector(({ dashboard: { users, areas } }) => ({
+    const { users, areas, filters } = useSelector(({ dashboard: { users, areas, filters } }) => ({
         users: users,
-        areas: areas
+        areas: areas,
+        filters: filters
     }));
-    const [usersByArea, setUsersByArea] = useState({});
+
+    const dispatch = useDispatch();
 
     useEffect(() => {
         if (users.length > 0) {
@@ -21,11 +25,40 @@ const Sidebar = ({}) => {
             });
 
             console.log(_obj);
+
+            const _features = areas?.features || [];
+
+            const __features = _features.map((el) => ({
+                ...el,
+                properties: {
+                    ...el.properties,
+                    num_users: _obj[el?.properties.area_id] || 0
+                }
+            }));
+
+            const newAreas = {
+                ...areas,
+                features: __features
+            };
+
+            dispatch(addAreas(newAreas));
         }
     }, [users]);
     return (
         <div className={styles.sidebarRoot}>
-            <div>sidebar</div>
+            <Slider
+                value={filters.numUsers}
+                onChange={(evt) =>
+                    dispatch(
+                        updateFilters({
+                            numUsers: Number(evt.target.value)
+                        })
+                    )
+                }
+                min={100}
+                max={300}
+                step={10}
+            />
         </div>
     );
 };
