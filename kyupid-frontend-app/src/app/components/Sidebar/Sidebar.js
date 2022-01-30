@@ -21,11 +21,6 @@ const Sidebar = ({}) => {
             });
 
             console.log(_obj);
-            const _features = areas.features;
-
-            const __features = _features.filter((el) => !_obj.hasOwnProperty(el.properties.area_id));
-
-            console.log(__features);
         }
     }, [users]);
     return (
